@@ -1,0 +1,15 @@
+# Variables de entorno y secretos
+.env
+
+# Datos persistentes de SQLite, capturas y sesión de Chromium
+data/
+screenshots/
+chrome_profile/
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/

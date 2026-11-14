@@ -1,0 +1,20 @@
+services:
+  discord-price-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: discord-price-tracker
+    restart: unless-stopped
+    # shm_size ampliado a 2GB para evitar cierres inesperados de Chromium en contenedores
+    shm_size: "2gb"
+    env_file:
+      - .env
+    environment:
+      - DISPLAY=:99
+      - PLAYWRIGHT_HEADLESS=false
+    ports:
+      - "${NOVNC_PORT:-6080}:6080"
+    volumes:
+      - ./data:/app/data
+      - ./screenshots:/app/screenshots
+      - ./chrome_profile:/app/chrome_profile
