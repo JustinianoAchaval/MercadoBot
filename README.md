@@ -14,7 +14,6 @@ Bot de Discord en Python 3.11+ para monitoreo de precios 24/7 pensado para despl
   - Al pegar cualquier URL en su canal privado (o usar `/agregar <url>`), el bot registra el producto y presenta botones interactivos (`[🎯 Definir Precio Objetivo]` con Modal o `[📉 Dejar abierto a cualquier bajada]`).
 - **Intervalos por Tienda y Sesión Persistente**:
   - **Mercado Libre**: cada 3 horas.
-  - **Buscalibre**: cada 12 horas.
   - **Amazon**: cada 12 horas.
   - **Otras tiendas**: cada 6 horas.
   - Perfil persistente en `./chrome_profile` protegido por `asyncio.Lock` para mantener cookies y sesiones iniciadas sin conflictos de concurrencia.
