@@ -7,6 +7,7 @@ Responsabilidades:
 - Respetar los intervalos de revisión por tienda:
   * Mercado Libre: cada 3 horas
   * Buscalibre: cada 12 horas
+  * Amazon: cada 12 horas
   * Otras tiendas: cada 6 horas
 - Ejecutar la máquina de estados Anti-Captcha:
   * Al detectar `es_captcha == True`, pausa la tienda en `estado_tiendas`, deja la pestaña abierta
@@ -38,6 +39,7 @@ logger = logging.getLogger("price_tracker.scraper")
 STORE_INTERVALS: dict[str, timedelta] = {
     "mercadolibre": timedelta(hours=3),
     "buscalibre": timedelta(hours=12),
+    "amazon": timedelta(hours=12),
     "otra": timedelta(hours=6),
 }
 

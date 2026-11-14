@@ -32,7 +32,7 @@ def utc_now_iso() -> str:
 def detectar_tienda(url: str) -> str:
     """
     Identifica la tienda a partir del dominio de la URL.
-    Retorna 'mercadolibre', 'buscalibre' u 'otra'.
+    Retorna 'mercadolibre', 'buscalibre', 'amazon' u 'otra'.
     """
     try:
         parsed = urlparse(url.strip())
@@ -53,6 +53,17 @@ def detectar_tienda(url: str) -> str:
         return "mercadolibre"
     if "buscalibre." in host:
         return "buscalibre"
+    if any(
+        domain in host
+        for domain in (
+            "amazon.",
+            "a.co",
+            "amzn.to",
+            "amzn.eu",
+            "amzn.com",
+        )
+    ):
+        return "amazon"
     return "otra"
 
 
@@ -146,7 +157,7 @@ class Database:
             )
 
             # Pre-inicializar registros de tiendas conocidas
-            for tienda_base in ("mercadolibre", "buscalibre", "otra"):
+            for tienda_base in ("mercadolibre", "buscalibre", "amazon", "otra"):
                 await db.execute(
                     """
                     INSERT OR IGNORE INTO estado_tiendas (tienda, pausada_captcha, ultima_prueba)
@@ -154,6 +165,20 @@ class Database:
                     """,
                     (tienda_base,),
                 )
+
+            # Reclasificar productos de Amazon que hayan sido guardados previamente como 'otra'
+            await db.execute(
+                """
+                UPDATE productos
+                SET tienda = 'amazon'
+                WHERE tienda = 'otra'
+                  AND (
+                      LOWER(url) LIKE '%amazon.%'
+                      OR LOWER(url) LIKE '%//a.co/%'
+                      OR LOWER(url) LIKE '%amzn.%'
+                  );
+                """
+            )
 
             await db.commit()
             logger.info("Base de datos inicializada correctamente en %s", self.db_path)
